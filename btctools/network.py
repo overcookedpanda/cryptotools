@@ -7,7 +7,7 @@ from .opcodes import ADDRESS
 class NETWORK(Enum):
     MAIN = 'main'
     TEST = 'test'
-
+    REGTEST = 'regtest'
 
 def current_network():
     return NETWORK(os.environ.get('CRYPTOTOOLS_NETWORK', 'main'))
@@ -66,9 +66,37 @@ test = {
     'broadcast_url': 'https://testnet.blockchain.info/pushtx'
 }
 
+regtest = {
+    'hrp': 'bcrt',
+    'keyhash': b'\x00',
+    'scripthash': b'\x05',
+    'wif': b'\x80',
+    'extended_prv': {
+        # https://github.com/spesmilo/electrum-docs/blob/master/xpub_version_bytes.rst
+        ADDRESS.P2PKH: b'\x04\x88\xad\xe4',  # xprv
+        ADDRESS.P2WPKH: b'\x04\xb2\x43\x0c',  # zprv
+        ADDRESS.P2WSH: b'\x02\xaa\x7a\x99',  # Zprv
+        ADDRESS.P2WPKH_P2SH: b'\x04\x9d\x78\x78',  # yprv
+        ADDRESS.P2WSH_P2SH: b'\x02\x95\xb4\x3f'  # Yprv
+    },
+    'extended_pub': {
+        # https://github.com/spesmilo/electrum-docs/blob/master/xpub_version_bytes.rst
+        ADDRESS.P2PKH: b'\x04\x88\xb2\x1e',  # xpub
+        ADDRESS.P2WPKH: b'\x04\xb2\x47\x46',  # zpub
+        ADDRESS.P2WSH: b'\x02\xaa\x7e\xd3',  # Zpub
+        ADDRESS.P2WPKH_P2SH: b'\x04\x9d\x7c\xb2',  # ypub
+        ADDRESS.P2WSH_P2SH: b'\x02\x95\xb4\x3f'  # Ypub
+    },
+    'utxo_url': 'https://blockchain.info/unspent?active={address}',
+    'rawtx_url': 'https://blockchain.info/rawtx/{txid}?format=hex',
+    'broadcast_url': 'https://blockchain.info/pushtx'
+
+}
+
 networks = {
     NETWORK.MAIN: main,
-    NETWORK.TEST: test
+    NETWORK.TEST: test,
+    NETWORK.REGTEST: regtest
 }
 
 
